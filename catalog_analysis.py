@@ -67,6 +67,15 @@ while i < len(movies):
 else:
     print('Шедевров не найдено')
 
+def normalize_title(title):
+    return ' '.join(map(lambda word: word[:1].upper() + word[1:], title.split()))
+
+def make_slug(title):
+    return title.lower().replace(' ', '-')
+
+def format_report_line(movie):
+    return f'"{normalize_title(movie['title'])}" ({movie['year']}) — {movie['rating']}/10, {duration_in_hours(movie['duration_min'])}, жанры: {', '.join(sorted(movie['genres']))}'
+
 def main():
     print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
 
