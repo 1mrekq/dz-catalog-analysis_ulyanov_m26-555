@@ -76,6 +76,12 @@ def make_slug(title):
 def format_report_line(movie):
     return f'"{normalize_title(movie['title'])}" ({movie['year']}) — {movie['rating']}/10, {duration_in_hours(movie['duration_min'])}, жанры: {', '.join(sorted(movie['genres']))}'
 
+def titles_sorted_by_rating(movies):
+    return sorted(movies, key=lambda movie: movie['rating'], reverse=True)
+
+def top_n_by_rating(movies, n=3):
+    return list(map(lambda movie: (movie['title'], movie['rating']), titles_sorted_by_rating(movies)[:3]))
+
 def main():
     print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
 
