@@ -53,6 +53,20 @@ def decade_label(year):
         case _:
             return 'старые'
 
+for movie in movies:
+    if 'comedy' in movie['genres']:
+        continue
+    print(f'{movie['title']}')
+
+i = 0
+while i < len(movies):
+    if movies[i]['rating'] > 9:
+        print(f'Шедевр: {movies[i]['title']}')
+        break
+    i+=1
+else:
+    print('Шедевров не найдено')
+
 def main():
     print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
 
