@@ -82,6 +82,22 @@ def titles_sorted_by_rating(movies):
 def top_n_by_rating(movies, n=3):
     return list(map(lambda movie: (movie['title'], movie['rating']), titles_sorted_by_rating(movies)[:3]))
 
+def count_by_genre(movies):
+    result = {}
+    for movie in movies:
+        for genre in movie.get('genres'):
+            result[genre] = result.get(genre, 0) + 1
+    return result
+
+def actor_filmography(movies):
+    result = {}
+    for movie in movies:
+        for actor in movie.get('actors'):
+            result[actor] = result.get(actor, []) + [movie['title']]
+    return result
+
+above_average = {movie['title']: movie['rating'] for movie in movies if movie['rating'] > average_rating(movies)}
+
 def main():
     print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
 
