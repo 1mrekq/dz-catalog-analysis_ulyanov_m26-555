@@ -1,6 +1,9 @@
+import math
+
 movies = [
     {"title": "The Dune Chronicles", "year": 2021, "genres": {"sci-fi", "drama"},
-     "rating": 8.6, "duration_min": 155, "actors": ["T. Chalamet", "R. Ferguson", "O. Isaac"]},
+     "rating": 8.6, "duration_min": 155, 
+     "actors": ["T. Chalamet", "R. Ferguson", "O. Isaac"]},
     {"title": "Kitchen Stories", "year": 2019, "genres": {"comedy", "drama"},
      "rating": 7.1, "duration_min": 98, "actors": ["A. Novak", "M. Ferguson"]},
     {"title": "silent hours", "year": 2016, "genres": {"thriller", "drama"},
@@ -28,7 +31,8 @@ def average_rating(movies):
 def catalog_age_stats(movies, current_year=2026):
     min_age = current_year - min(movie['year'] for movie in movies)
     max_age = current_year - max(movie['year'] for movie in movies)
-    average = math.ceil(sum(current_year - movie['year'] for movie in movies) / len(movies))
+    average = math.ceil(sum(current_year - movie['year'] for movie in movies) 
+                        / len(movies))
     return (max_age, min_age, average)
 
 MINUTES_IN_HOUR = 60
@@ -74,13 +78,18 @@ def make_slug(title):
     return title.lower().replace(' ', '-')
 
 def format_report_line(movie):
-    return f'"{normalize_title(movie['title'])}" ({movie['year']}) — {movie['rating']}/10, {duration_in_hours(movie['duration_min'])}, жанры: {', '.join(sorted(movie['genres']))}'
+    return (
+    f'"{normalize_title(movie["title"])}" ({movie["year"]}) — {movie["rating"]}/10, '
+    f'{duration_in_hours(movie["duration_min"])}, жанры: '
+    f"{', '.join(sorted(movie['genres']))}"
+)
 
 def titles_sorted_by_rating(movies):
     return sorted(movies, key=lambda movie: movie['rating'], reverse=True)
 
 def top_n_by_rating(movies, n=3):
-    return list(map(lambda movie: (movie['title'], movie['rating']), titles_sorted_by_rating(movies)[:3]))
+    return list(map(lambda movie: (movie['title'], movie['rating']), 
+                    titles_sorted_by_rating(movies)[:3]))
 
 def count_by_genre(movies):
     result = {}
@@ -96,7 +105,8 @@ def actor_filmography(movies):
             result[actor] = result.get(actor, []) + [movie['title']]
     return result
 
-above_average = {movie['title']: movie['rating'] for movie in movies if movie['rating'] > average_rating(movies)}
+above_average = {movie['title']: movie['rating'] 
+                 for movie in movies if movie['rating'] > average_rating(movies)}
 
 def all_genres(movies):
     return set().union(*[set(movie['genres']) for movie in movies])
@@ -117,9 +127,47 @@ for movie in iter_high_rated(movies):
 
 sum(m["duration_min"] for m in movies if m["rating"] > 7)
 
-def main():
-    print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
+def build_report(movies):
+    avg_rating = average_rating(movies)
+    _, _, avg_age = catalog_age_stats(movies)
 
+    top_movies = titles_sorted_by_rating(movies)[:3]
+
+    top_lines = []
+    for movie in top_movies:
+        title_norm = normalize_title(movie['title'])
+        duration_str = duration_in_hours(movie['duration_min'])
+        genres_str = ', '.join(sorted(movie['genres']))
+        line = f'  "{title_norm}" ({movie["year"]}) — {movie["rating"]}/10," \
+            "{duration_str}, жанры: {genres_str}'
+        top_lines.append(line)
+
+    genre_counts = count_by_genre(movies)
+    sorted_genres = sorted(genre_counts.items(), key=lambda x: (-x[1], x[0]))
+
+    genres_lines = [f'  {genre} — {count}' for genre, count in sorted_genres]
+
+    # Все жанры каталога (в алфавитном порядке)
+    all_g = sorted(all_genres(movies))
+    all_genres_line = ', '.join(all_g)
+
+    report = f'''ОТЧЕТ ПО КАТАЛОГУ
+Средний рейтинг: {avg_rating}
+Средний возраст фильмов: {avg_age} лет
+
+Топ-3 фильма:
+{chr(10).join(top_lines)}
+
+Фильмов по жанрам:
+{chr(10).join(genres_lines)}
+
+Все жанры каталога: {all_genres_line}'''
+
+    print(report)
+
+
+def main():
+    build_report(movies)
 
 if __name__ == "__main__":
     main()
