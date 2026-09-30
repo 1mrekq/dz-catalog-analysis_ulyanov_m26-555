@@ -21,6 +21,21 @@ movies = [
      "rating": 7.3, "duration_min": 129, "actors": ["P. Diaz", "T. Chalamet"]},
 ]
 
+def average_rating(movies):
+    return round(sum(movie['rating'] for movie in movies) / len(movies), 1)
+    
+
+def catalog_age_stats(movies, current_year=2026):
+    min_age = current_year - min(movie['year'] for movie in movies)
+    max_age = current_year - max(movie['year'] for movie in movies)
+    average = math.ceil(sum(current_year - movie['year'] for movie in movies) / len(movies))
+    return (max_age, min_age, average)
+
+MINUTES_IN_HOUR = 60
+
+def duration_in_hours(minutes):
+    return f'{minutes // MINUTES_IN_HOUR}ч {minutes % MINUTES_IN_HOUR}м'
+
 def main():
     print("Hello from dz-catalog-analysis-ulyanov-m26-555!")
 
